@@ -2,12 +2,21 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import axios from "axios";
+
 import "./App.css";
 import "./assets/fonts/stylesheet.css";
+
+import Loading from "./components/Loading";
+import Header from "./components/Header";
+import Title from "./components/Title";
+import Main from "./components/Main";
+import Footer from "./components/Footer";
 
 function App() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [basket, setBasket] = useState([]);
+  const [cost, setCost] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,52 +34,20 @@ function App() {
 
   return isLoading ? (
     <>
-      <p>Chargement...</p>
+      <Loading />
     </>
   ) : (
     <>
-      <header>
-        <img src="/logo.png" alt="Logo Deliveroo" />
-      </header>
-      <div className="title">
-        <div className="store">
-          <h1>{data.restaurant.name}</h1>
-          <p>{data.restaurant.description}</p>
-        </div>
-        <img
-          src={data.restaurant.picture}
-          alt="Photo de présentation du restaurant"
-        />
-      </div>
-      <main>
-        {data.categories.map((elem, index) => {
-          return (
-            <section key={elem.name + index}>
-              <h2>{elem.name}</h2>
-
-              {elem.meals.map((elem) => {
-                return (
-                  <article>
-                    <div className="product" key={elem.id}>
-                      <h3>{elem.title}</h3>
-                      <p>{elem.description}</p>
-                      <div className="price">
-                        <p>{elem.price} €</p>
-                        {elem.popular && <span>Popular</span>}
-                      </div>
-                    </div>
-                    {elem.picture && <img src={elem.picture} alt="image" />}
-                  </article>
-                );
-              })}
-            </section>
-          );
-        })}
-      </main>
-      <footer>
-        Made with <span>React</span> at <span>Le Reacteur</span> by{" "}
-        <span>Yann Treuiller-Schlachter</span>
-      </footer>
+      <Header />
+      <Title data={data} />
+      <Main
+        data={data}
+        basket={basket}
+        setBasket={setBasket}
+        cost={cost}
+        setCost={setCost}
+      />
+      <Footer />
     </>
   );
 }
