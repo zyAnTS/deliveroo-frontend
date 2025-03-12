@@ -1,19 +1,23 @@
 import React from "react";
 
 const Product = ({ meals, basket, setBasket, cost, setCost }) => {
-  meals.quantity = 0;
-
   return (
     <article
       key={meals.id}
       onClick={() => {
-        meals.quantity += 1;
-        const newBasket = [...basket];
-        if (basket.includes(meals) !== true) {
-          newBasket.push(meals);
+        const copy = [...basket];
+
+        // vérifier si l'élément existe
+        const foundElement = copy.find((elem) => elem.id === meals.id);
+
+        if (foundElement) {
+          foundElement.quantity += 1;
+        } else {
+          copy.push({ ...meals, quantity: 1 });
         }
-        setCost(cost + Math.floor(Number(meals.price)));
-        setBasket(newBasket);
+
+        setBasket(copy);
+        setCost(cost + Math.round(Number(meals.price)));
       }}
     >
       <div className="product">
